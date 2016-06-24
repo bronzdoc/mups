@@ -1,5 +1,9 @@
 require "mups/version"
+require "mups/consumer"
 
 module Mups
-  # Your code goes here...
+  def self.start
+    consumer = Mups::Consumer.new
+    consumer.start
+  end
 end
