@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require "mups"
+
+redis_url = ARGV[0]
+Mups.start(redis_url)
+
