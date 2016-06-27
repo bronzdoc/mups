@@ -12,7 +12,7 @@ RSpec.describe Mups::Consumer do
       it "should build url with the mtime variable" do
         @redis.lpush("mups:mtime", @mtime)
         mups = Mups::Consumer.new(@redis)
-        expect(mups.uri.to_s).to match(@mtime)
+        expect(mups.stream_uri.to_s).to match(@mtime)
       end
     end
   end

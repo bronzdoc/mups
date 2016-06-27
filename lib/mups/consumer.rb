@@ -7,13 +7,13 @@ require "http"
 
 module Mups
   class Consumer
-    attr_reader :queue, :uri
+    attr_reader :queue, :stream_uri
 
     def initialize(redis)
       @redis = redis
 
       # Try to start the stream with the las mtime enqueued
-      @uri = if @redis.llen("mups:mtime") > 0
+      @stream_uri = if @redis.llen("mups:mtime") > 0
                mtime = @redis.lpop("mups:mtime")
                URI("http://stream.meetup.com/2/open_events?since_mtime=#{mtime}")
              else
@@ -27,7 +27,7 @@ module Mups
       Thread.abort_on_exception = true
 
       read = Thread.new(queue) do |queue|
-        body = HTTP.get(@uri).body
+        body = HTTP.get(@stream_uri).body
 
         buffer = ""
         body.each do |chunk|
