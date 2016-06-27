@@ -1,24 +1,23 @@
+#require "redis"
 require "json"
 require "thread"
 require "socket"
 require "logger"
-require "redis"
-require "pry"
 require "http"
 
 module Mups
   class Consumer
     attr_reader :queue, :uri
 
-    def initialize(redis_url)
-      @redis = Redis.new(url: URI.parse(redis_url))
+    def initialize(redis)
+      @redis = redis
 
       # Try to start the stream with the las mtime enqueued
       @uri = if @redis.llen("mups:mtime") > 0
-               URI("http://stream.meetup.com/2/open_events")
-             else
-               mtime = @redis.llget("mups:mtime")
+               mtime = @redis.lpop("mups:mtime")
                URI("http://stream.meetup.com/2/open_events?since_mtime=#{mtime}")
+             else
+               URI("http://stream.meetup.com/2/open_events")
              end
       @queue = Queue.new
       @logger = Logger.new(STDOUT)
