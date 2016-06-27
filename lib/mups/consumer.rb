@@ -1,8 +1,5 @@
-#require "redis"
 require "json"
 require "thread"
-require "socket"
-require "logger"
 require "http"
 
 module Mups
@@ -54,8 +51,8 @@ module Mups
             @redis.lpush("mups:mtime", mtime)
 
             @logger.info("REDIS -> list count #{count}")
-          rescue JSON::ParserError => e
-            @logger.error(e.message)
+          rescue JSON::ParserError
+            @logger.error("Couldn't parse JSON stream, not saving...")
           end
         end
       end
