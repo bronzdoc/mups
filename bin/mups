@@ -2,6 +2,7 @@
 
 require "mups"
 
-redis_url = ARGV[0]
-Mups.start(redis_url)
+# url or help
+arg = ARGV[0]
+Mups.start(arg)
 
